@@ -1,0 +1,33 @@
+{
+  "name": "gemini-chroma-rag",
+  "version": "0.1.0",
+  "description": "Learn AI engineering by building a 'chat with your documents' RAG app: TypeScript + Gemini (free tier) + ChromaDB",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "chroma:up": "docker compose up -d",
+    "chroma:down": "docker compose down",
+    "hello": "tsx src/playground/01-hello-gemini.ts",
+    "embeddings": "tsx src/playground/02-embeddings.ts",
+    "ingest": "tsx src/cli/ingest.ts",
+    "ingest:reset": "tsx src/cli/ingest.ts --reset",
+    "ask": "tsx src/cli/ask.ts",
+    "chat": "tsx src/cli/chat.ts",
+    "test": "tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm test"
+  },
+  "dependencies": {
+    "@google/genai": "^1.27.0",
+    "chromadb": "^3.5.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^6.0.2"
+  }
+}

@@ -15,10 +15,18 @@ try {
 const MISSING_KEY = "missing — copy .env.example to .env and paste your key from https://aistudio.google.com/apikey";
 
 const EnvSchema = z.object({
-  GEMINI_API_KEY: z.string({ error: MISSING_KEY }).min(1, MISSING_KEY),
+  // Which adapters container.ts wires up: Google's cloud API or local models via Ollama.
+  LLM_PROVIDER: z.enum(["gemini", "ollama"]).default("gemini"),
+
+  // Only required when LLM_PROVIDER=gemini (checked in loadEnv).
+  GEMINI_API_KEY: z.string().optional(),
   GEMINI_CHAT_MODEL: z.string().min(1).default("gemini-3.6-flash"),
   GEMINI_EMBED_MODEL: z.string().min(1).default("gemini-embedding-2"),
   EMBED_DIMENSIONS: z.coerce.number().int().min(128).max(3072).default(768),
+
+  OLLAMA_HOST: z.url().default("http://localhost:11434"),
+  OLLAMA_CHAT_MODEL: z.string().min(1).default("qwen3:8b"),
+  OLLAMA_EMBED_MODEL: z.string().min(1).default("embeddinggemma"),
 
   CHROMA_HOST: z.string().min(1).default("localhost"),
   CHROMA_PORT: z.coerce.number().int().positive().default(8000),
@@ -42,7 +50,10 @@ export function loadEnv(source: Record<string, string | undefined> = process.env
     const issues = result.error.issues.map((i) => `  • ${i.path.join(".")}: ${i.message}`).join("\n");
     throw new ConfigError(`Invalid configuration in .env:\n${issues}`);
   }
-  if (result.data.CHUNK_OVERLAP >= result.data.CHUNK_SIZE) {
+  if (result.data.LLM_PROVIDER === "gemini" && !result.data.GEMINI_API_KEY) {
+    throw new ConfigError(`Invalid configuration in .env:\n  • GEMINI_API_KEY: ${MISSING_KEY} (or set LLM_PROVIDER=ollama)`);
+  }
+  if (result.data.CHUNK_OVERLAP >=result.data.CHUNK_SIZE) {
     throw new ConfigError("Invalid configuration in .env:\n  • CHUNK_OVERLAP must be smaller than CHUNK_SIZE");
   }
   return result.data;

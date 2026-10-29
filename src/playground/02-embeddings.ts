@@ -6,10 +6,9 @@
  *
  * Try: add your own sentences, try another language (Bangla!), try a typo.
  */
-import { GoogleGenAI } from "@google/genai";
-import { GeminiEmbedder } from "../adapters/gemini/gemini.embedder";
 import { handleCliError } from "../cli/shared";
 import { loadEnv } from "../config/env";
+import { createModels } from "../container";
 import { cosineSimilarity } from "../shared/vector";
 
 const sentences = [
@@ -21,7 +20,9 @@ const sentences = [
 
 async function main() {
   const env = loadEnv();
-  const embedder = new GeminiEmbedder(new GoogleGenAI({ apiKey: env.GEMINI_API_KEY }), env.GEMINI_EMBED_MODEL, env.EMBED_DIMENSIONS);
+  // Uses whichever embedder LLM_PROVIDER selects (Gemini or Ollama). Compare the two!
+  const { embedder } = createModels(env);
+  console.log(`Embedding model: ${embedder.modelId}`);
 
   const vectors = await embedder.embedDocuments(sentences.map((text) => ({ title: "none", text })));
   console.log(`${vectors.length} vectors × ${vectors[0]?.length} dimensions`);

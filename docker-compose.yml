@@ -5,6 +5,9 @@ services:
       - "8000:8000"
     volumes:
       - chroma-data:/data
+    environment:
+      # Lets browser-based GUIs (e.g. ChromaDB UI) talk to this server
+      CHROMA_CORS_ALLOW_ORIGINS: '["https://blackydrum.github.io", "http://localhost:8090"]'
     restart: unless-stopped
 
 volumes:

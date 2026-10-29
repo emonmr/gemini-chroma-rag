@@ -26,6 +26,7 @@ export function handleCliError(error: unknown): never {
 
 function hintFor(error: unknown, message: string): string | undefined {
   if (error instanceof ConfigError) return undefined; // message already explains it
+  if (/ollama/i.test(message)) return undefined; // the Ollama adapters write their own hints
   const status = getStatus(error);
   if (status === 429 || /RESOURCE_EXHAUSTED|quota/i.test(message))
     return "Free-tier rate limit or daily quota hit. Wait a minute (or until tomorrow); your limits are shown in Google AI Studio.";

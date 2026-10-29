@@ -20,7 +20,7 @@ async function main() {
   // 1) One-shot request/response
   const response = await ai.models.generateContent({
     model: env.GEMINI_CHAT_MODEL,
-    contents: "In two sentences: what is an embedding, explained to a C# developer?",
+    contents: "In two sentences: what is an RAG, explained to a Seniour software engineer?",
     config: { systemInstruction: "You are a concise senior engineer." },
   });
   console.log("── generateContent ──");

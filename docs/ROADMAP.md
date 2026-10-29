@@ -8,7 +8,7 @@ Rule of thumb: **read → run → break it → build the next piece.**
 
 ## Phase 0 — Setup & first contact (½ day)
 
-- [ ] **0.1 Run it.** Follow the README quick start until `npm run chat` answers "How many days of annual leave do I get?" with a citation.
+- [x] **0.1 Run it.** Follow the README quick start until `npm run chat` answers "How many days of annual leave do I get?" with a citation.
 - [ ] **0.2 Your first LLM call.** Run `npm run hello`, then edit `src/playground/01-hello-gemini.ts`: change the system instruction, print `usageMetadata`, ask about the fictional "Nimbus Coffee" leave policy *without* RAG and watch it invent an answer (hallucination).
 - [ ] **0.3 See embeddings.** Run `npm run embeddings`. Add your own sentences (Bangla + English, a typo, an unrelated sentence). Write down: what score means "related" for this model?
 
@@ -62,3 +62,4 @@ Read the code in this order: `core/ports.ts` → `rag/chunker.ts` → `rag/inges
 ## My notes & conclusions
 
 <!-- Write what you learned after each step. Future you (and interviewers) will love this. -->
+- [ ] today i just setup project and hit some command from readme file . just saw how vector database works and how to get gemini api

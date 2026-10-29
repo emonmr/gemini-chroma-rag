@@ -24,11 +24,24 @@ Claude Code sessions are stored per machine, so this file carries the context ac
 - `chroma browse <collection> --local` — official TUI, but the CLI bundled with the npm `chromadb` package fails on Windows x64 ("Only ARM64 is supported"). Needs the standalone CLI or `pip install chromadb`.
 - Community web UI: chromadb-admin (Docker, port 3001, connect to `http://host.docker.internal:8000`) — check Chroma 1.x compatibility first.
 - Raw embedding numbers are meaningless to read; only comparisons between vectors matter.
+- ✅ **ChromaDB UI works:** https://blackydrum.github.io/chromadb-ui/ → URL `http://localhost:8000` (no trailing slash), `default_tenant` / `default_database`, then click the collection in the sidebar. CORS for it is already set in `docker-compose.yml`.
 
 ### Next steps (pick up here)
 1. Quick experiments: hallucination without RAG (step 0.2), own sentences in `npm run embeddings` (0.3), ask an off-topic question / try `TOP_K=1`.
 2. Then `/next-step` → **1.1 `ask --debug`** (print retrieved chunks + scores + the full prompt). Recommended first real step.
 3. Open offer from Claude: a small `npm run peek` script to list the chunks in Chroma.
+
+## 2026-10-30 — Session 2: Gemini quota hit → going local with Ollama
+
+- Gemini free-tier quota ran out, so I pulled roadmap **6.1 (Ollama)** forward. GPU: RTX 3060 Ti (8 GB VRAM).
+- Models: `embeddinggemma` (768 dims, same `title: … | text: …` prompt format as gemini-embedding-2) + `qwen3:8b` (~5.2 GB, chat).
+- Claude did the plumbing: `LLM_PROVIDER=gemini|ollama` in `env.ts`/`.env.example`, `createModels()` in `container.ts`,
+  collection name now uses the active embed model (`docs-embeddinggemma-768`), `npm run embeddings` follows the provider.
+- I said "just do it" → Claude wrote the adapters (`src/adapters/ollama/*`, shared HTTP/error helper in `ollama.http.ts`). 46/46 tests green.
+- ✅ Runs fully local: `LLM_PROVIDER=ollama`, ingest = 6 chunks in 14s, `ask` ≈ 5s with correct citations. qwen3:8b ≈ 68 tok/s, 100% GPU.
+- Observed: embeddinggemma similarity scores are on a different scale than Gemini's (top hit ~0.55–0.62). Scores are only comparable within one model → matters for `MIN_SCORE` (step 2.1).
+- 6.1 not ticked yet: its "compare quality via the Phase 3 eval" part needs the eval first.
+- **Next:** read the two adapters (esp. NDJSON parsing in `ollama.chat.ts` `stream()`), finish 0.2/0.3 with Ollama, then 1.1 `ask --debug`.
 
 ### New-machine setup checklist
 - `npm install`

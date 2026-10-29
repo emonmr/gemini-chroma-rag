@@ -41,10 +41,28 @@ Claude Code sessions are stored per machine, so this file carries the context ac
 - ✅ Runs fully local: `LLM_PROVIDER=ollama`, ingest = 6 chunks in 14s, `ask` ≈ 5s with correct citations. qwen3:8b ≈ 68 tok/s, 100% GPU.
 - Observed: embeddinggemma similarity scores are on a different scale than Gemini's (top hit ~0.55–0.62). Scores are only comparable within one model → matters for `MIN_SCORE` (step 2.1).
 - 6.1 not ticked yet: its "compare quality via the Phase 3 eval" part needs the eval first.
-- **Next:** read the two adapters (esp. NDJSON parsing in `ollama.chat.ts` `stream()`), finish 0.2/0.3 with Ollama, then 1.1 `ask --debug`.
+- Setup decided: **home PC = Ollama, office PC = Gemini**. `.env` is git-ignored, so each PC keeps its own `LLM_PROVIDER`.
+  README now has a "Choose your models" + "Using two PCs" section. Everything committed & pushed (`b91bb98`).
+- `npm run embeddings` on embeddinggemma: Bangla question ↔ English question = **0.723** (higher than the English answer, 0.701!);
+  unrelated sentences ≈ 0.20–0.37, related ≈ 0.43–0.72. → embeddings capture meaning across languages.
+
+### ▶ Pick up here (next session — office PC, Gemini)
+1. Office setup (first time after this session): `git pull` → `npm install` → `.env` has `LLM_PROVIDER=gemini` + key →
+   `npm run chroma:up` → `npm run ingest` → `npm run check` (expect 46 passing).
+2. **Step 0.2** (Gemini quota should have reset): `npm run hello`, then in `src/playground/01-hello-gemini.ts`:
+   extreme `systemInstruction` (pirate / Bangla), read `usageMetadata` (prompt vs candidates vs thoughts tokens),
+   ask "How many days of annual leave do Nimbus Coffee employees get?" WITHOUT RAG 2–3× → see it invent; compare with `npm run ask`.
+   (Home alternative: `ollama run qwen3:8b --verbose`, `/set system …`, `/set nothink`.)
+3. **Step 0.3**: add sentences to `src/playground/02-embeddings.ts` — a typo, an *unrelated* Bangla sentence, a negation
+   ("Employees get no paid leave"). Run `npm run embeddings` on Gemini and compare with the embeddinggemma numbers above.
+   Answer: "on this model, score above ___ = related".
+4. Write 2–3 lines per step in `docs/ROADMAP.md` → "My notes & conclusions", then `/review-step` (Claude ticks 0.2/0.3).
+5. Then `/next-step` → **1.1 `ask --debug`**.
+- Still open: read `src/adapters/ollama/ollama.chat.ts` `stream()` (NDJSON buffering); `npm run peek` script offer.
 
 ### New-machine setup checklist
 - `npm install`
-- Copy `.env.example` → `.env`, paste `GEMINI_API_KEY` (the key is NOT in git).
-- `npm run chroma:up` then `npm run ingest` (Chroma data lives in a local Docker volume, not in git — must re-ingest).
+- Copy `.env.example` → `.env`. Set `LLM_PROVIDER` (`gemini` + paste `GEMINI_API_KEY`, or `ollama` — the key is NOT in git).
+- Ollama PCs only: `ollama pull embeddinggemma` and `ollama pull qwen3:8b`.
+- `npm run chroma:up` then `npm run ingest` (Chroma data lives in a local Docker volume, not in git — must re-ingest, once per provider).
 - `npm run check` to confirm everything is green.

@@ -16,6 +16,11 @@ const sentences = [
   "Staff receive 22 days of paid annual leave.",
   "The espresso machine needs descaling every month.",
   "আমি কত দিন ছুটি পাব?", // "How many days of leave will I get?" in Bangla
+  // TODO (step 0.3): add your own sentences, then predict each score BEFORE you run it:
+  // TODO: a typo version of sentence 1, e.g. "How mny vacaton days do employes get?"
+  // TODO: a NEGATION, e.g. "Employees get no paid leave." (does the model notice "no"?)
+  // TODO: an UNRELATED Bangla sentence (about weather, food…) → language vs. meaning
+  // TODO: one sentence of your choice that should be related but shares no words
 ];
 
 async function main() {
@@ -41,6 +46,9 @@ async function main() {
   const query = await embedder.embedQuery("how much time off do I get?");
   console.log("\nQuery 'how much time off do I get?' vs each sentence:");
   sentences.forEach((s, i) => console.log(`${cosineSimilarity(query, vectors[i]!).toFixed(3)}  ${s}`));
+
+  // TODO (step 0.3): once topK() passes its tests, print the top 3 sentences for the query
+  // using topK(query, vectors, 3). That's a mini vector DB: what Chroma does in `npm run ask`.
 }
 
 main().catch(handleCliError);

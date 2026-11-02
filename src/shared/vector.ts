@@ -29,3 +29,24 @@ export function cosineSimilarity(a: readonly number[], b: readonly number[]): nu
   const denom = magnitude(a) * magnitude(b);
   return denom === 0 ? 0 : dot(a, b) / denom;
 }
+
+export interface ScoredIndex {
+  /** Position of the vector in the input array. */
+  index: number;
+  /** Cosine similarity to the query. */
+  score: number;
+}
+
+/**
+ * Brute-force nearest neighbours: the `k` vectors most similar to `query`, best first.
+ * SQL mental model: SELECT index, cosine(query, v) AS score ORDER BY score DESC LIMIT k.
+ * Chroma does the same thing, but uses an HNSW index so it doesn't have to scan every row.
+ */
+export function topK(query: readonly number[], vectors: readonly (readonly number[])[], k: number): ScoredIndex[] {
+  // TODO: score every vector against the query with cosineSimilarity (keep its index).
+  // TODO: sort by score, highest first.
+  // TODO: return at most k results. k <= 0 → []. k larger than the list → all of them.
+  // Edge case to think about: should a length mismatch throw? (cosineSimilarity already decides.)
+  void query; void vectors; void k;
+  throw new Error("TODO: implement topK");
+}

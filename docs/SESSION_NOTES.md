@@ -66,3 +66,14 @@ Claude Code sessions are stored per machine, so this file carries the context ac
 - Ollama PCs only: `ollama pull embeddinggemma` and `ollama pull qwen3:8b`.
 - `npm run chroma:up` then `npm run ingest` (Chroma data lives in a local Docker volume, not in git — must re-ingest, once per provider).
 - `npm run check` to confirm everything is green.
+
+## 2026-11-04 — Session 3: step 0.3 in progress (topK)
+
+- 0.2 ticked. Implemented `topK()` in `src/shared/vector.ts` → 51/51 tests green. Added 4 own sentences to `02-embeddings.ts`.
+- `/review-step` result — 0.3 NOT ticked yet. To do (office PC, Gemini):
+  1. `02-embeddings.ts`: `return topK(...)` prints nothing → loop over it and `console.log` score + `sentences[r.index]`.
+  2. Add the missing **typo** and **negation** ("Employees get no paid leave.") sentences — predict scores first.
+  3. Small: in `topK()` do `if (k <= 0) return [];` first (don't score everything just to throw it away).
+  4. `npm run embeddings` on Gemini → write "on this model, score above ___ = related" in ROADMAP notes,
+     compare with embeddinggemma (home: related ≈ 0.43–0.72, unrelated ≈ 0.20–0.37).
+  5. `/review-step` → give Claude the "Learned:" sentence → tick 0.3. Then `/next-step` → **1.1 `ask --debug`**.

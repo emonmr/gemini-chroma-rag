@@ -47,6 +47,7 @@ export function topK(query: readonly number[], vectors: readonly (readonly numbe
   // TODO: sort by score, highest first.
   // TODO: return at most k results. k <= 0 → []. k larger than the list → all of them.
   // Edge case to think about: should a length mismatch throw? (cosineSimilarity already decides.)
-  void query; void vectors; void k;
-  throw new Error("TODO: implement topK");
+  const scored: ScoredIndex[] = vectors.map((v, i) => ({ index: i, score: cosineSimilarity(query, v) }));
+  scored.sort((a, b) => b.score - a.score);
+  return k <= 0 ? [] : scored.slice(0, k);
 }

@@ -9,7 +9,7 @@
 import { handleCliError } from "../cli/shared";
 import { loadEnv } from "../config/env";
 import { createModels } from "../container";
-import { cosineSimilarity } from "../shared/vector";
+import { cosineSimilarity, topK } from "../shared/vector";
 
 const sentences = [
   "How many vacation days do employees get?",
@@ -21,6 +21,10 @@ const sentences = [
   // TODO: a NEGATION, e.g. "Employees get no paid leave." (does the model notice "no"?)
   // TODO: an UNRELATED Bangla sentence (about weather, food…) → language vs. meaning
   // TODO: one sentence of your choice that should be related but shares no words
+  "আজকের আবহাওয়া কেমন?", // "How is the weather today?" in Bangla,
+  "How much money for office equipment for my home office?",
+  "If employees work in holidays, do they get paid?",
+  "How many days for sick leave?"
 ];
 
 async function main() {
@@ -49,6 +53,7 @@ async function main() {
 
   // TODO (step 0.3): once topK() passes its tests, print the top 3 sentences for the query
   // using topK(query, vectors, 3). That's a mini vector DB: what Chroma does in `npm run ask`.
+  return topK(query, vectors, 3);
 }
 
 main().catch(handleCliError);

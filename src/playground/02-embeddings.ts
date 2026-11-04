@@ -24,7 +24,8 @@ const sentences = [
   "আজকের আবহাওয়া কেমন?", // "How is the weather today?" in Bangla,
   "How much money for office equipment for my home office?",
   "If employees work in holidays, do they get paid?",
-  "How many days for sick leave?"
+  "How many vacition days ?",
+  "Employees get no paid leave."
 ];
 
 async function main() {
@@ -49,11 +50,10 @@ async function main() {
   // Asymmetric retrieval: a QUESTION embedded as a query vs. documents
   const query = await embedder.embedQuery("how much time off do I get?");
   console.log("\nQuery 'how much time off do I get?' vs each sentence:");
-  sentences.forEach((s, i) => console.log(`${cosineSimilarity(query, vectors[i]!).toFixed(3)}  ${s}`));
-
-  // TODO (step 0.3): once topK() passes its tests, print the top 3 sentences for the query
-  // using topK(query, vectors, 3). That's a mini vector DB: what Chroma does in `npm run ask`.
-  return topK(query, vectors, 3);
+console.log("\nTop 3 for the query (topK):");
+for (const { index, score } of topK(query, vectors, 3)) {
+  console.log(`${score.toFixed(3)}  ${sentences[index]}`);
+}
 }
 
 main().catch(handleCliError);

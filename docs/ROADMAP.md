@@ -62,5 +62,6 @@ Read the code in this order: `core/ports.ts` → `rag/chunker.ts` → `rag/inges
 ## My notes & conclusions
 
 <!-- Write what you learned after each step. Future you (and interviewers) will love this. -->
-- [ ] today i just setup project and hit some command from readme file . just saw how vector database works and how to get gemini api
-- [ ] Today I learned what an AI hallucination is, and how RAG (Retrieval-Augmented Generation) helps prevent the AI from hallucinating.
+- [ x] today i just setup project and hit some command from readme file . just saw how vector database works and how to get gemini api
+- [ x] Today I learned what an AI hallucination is, and how RAG (Retrieval-Augmented Generation) helps prevent the AI from hallucinating.
+- [x] I now understand the Gemini similarity scores. Relevant sentences like "How many vacation days do employees get?" score above 0.822, whereas completely irrelevant ones like "আজকের আবহাওয়া কেমন?" drop to around 0.596.

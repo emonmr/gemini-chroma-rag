@@ -77,3 +77,17 @@ Claude Code sessions are stored per machine, so this file carries the context ac
   4. `npm run embeddings` on Gemini → write "on this model, score above ___ = related" in ROADMAP notes,
      compare with embeddinggemma (home: related ≈ 0.43–0.72, unrelated ≈ 0.20–0.37).
   5. `/review-step` → give Claude the "Learned:" sentence → tick 0.3. Then `/next-step` → **1.1 `ask --debug`**.
+
+## 2026-11-04 — Session 4 (office PC, Gemini): step 0.3 approved, not ticked yet
+
+- Added typo + negation sentences; `02-embeddings.ts` now prints the topK top 3. 51/51 tests green.
+- **Gemini `gemini-embedding-2` scores:** related 0.72–0.92 (typo ↔ original 0.924), unrelated 0.55–0.67 → cut-off ≈ **0.70**.
+  Floor is much higher than embeddinggemma (unrelated 0.20–0.37) → `MIN_SCORE` must be tuned per model.
+- **Negation:** "Employees get no paid leave." ↔ "Staff receive 22 days of paid annual leave." = **0.808** → embeddings capture topic, not "no".
+- Top 3 for "how much time off do I get?": Bangla leave question 0.867, typo 0.801, vacation question 0.777.
+
+### ▶ Pick up here
+1. Give Claude the "Learned:" sentence → Claude ticks 0.3 in ROADMAP and fixes `- [ x]` → `- [x]` in the notes.
+2. Small cleanup in `02-embeddings.ts`: dangling "vs each sentence:" heading + indentation of the topK loop.
+   Optional: `if (k <= 0) return [];` first in `topK()`; stretch: "Employees get 30 days of paid leave." (numbers).
+3. `/next-step` → **1.1 `ask --debug`**.

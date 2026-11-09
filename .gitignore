@@ -4,3 +4,4 @@ chroma-data/
 dist/
 *.log
 .DS_Store
+./idea/

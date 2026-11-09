@@ -2,7 +2,7 @@
  * QUERY PIPELINE (the "retrieve + generate" half of RAG):
  *   question → embed → nearest chunks → prompt with context → LLM answer
  */
-import type { ChatModel, Embedder, VectorStore } from "../core/ports";
+import type { ChatModel, Embedder, GenerateRequest, VectorStore } from "../core/ports";
 import type { Answer, ChatMessage, RetrievedChunk } from "../core/types";
 import { buildUserPrompt, SYSTEM_PROMPT } from "./prompt";
 
@@ -20,6 +20,8 @@ export interface AskOptions {
 
 export type AskStreamEvent =
   | { type: "sources"; sources: RetrievedChunk[] }
+  /** Exactly what is sent to the LLM — for debugging (`npm run ask:debug`). Comes after "sources", before any "delta". */
+  | { type: "prompt"; request: GenerateRequest }
   | { type: "delta"; text: string };
 
 export class AskService {
@@ -41,10 +43,8 @@ export class AskService {
   /** Full answer in one go. `history` = earlier turns (raw questions + answers). */
   async ask(question: string, history: ChatMessage[] = []): Promise<Answer> {
     const sources = await this.retrieve(question);
-    const text = await this.deps.chat.generate({
-      system: SYSTEM_PROMPT,
-      messages: [...history, { role: "user", text: buildUserPrompt(question, sources) }],
-    });
+    const request = this.buildRequest(question, sources, history);
+    const text = await this.deps.chat.generate(request);
     return { text, sources };
   }
 
@@ -53,10 +53,17 @@ export class AskService {
     const sources = await this.retrieve(question);
     yield { type: "sources", sources };
 
-    const stream = this.deps.chat.stream({
+    const request = this.buildRequest(question, sources, history);
+    yield { type: "prompt", request };
+
+    const stream = this.deps.chat.stream(request);
+    for await (const text of stream) yield { type: "delta", text };
+  }
+
+  private buildRequest(question: string, sources: RetrievedChunk[], history: ChatMessage[]): GenerateRequest {
+    return {
       system: SYSTEM_PROMPT,
       messages: [...history, { role: "user", text: buildUserPrompt(question, sources) }],
-    });
-    for await (const text of stream) yield { type: "delta", text };
+    };
   }
 }

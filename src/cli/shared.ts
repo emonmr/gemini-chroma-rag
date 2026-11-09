@@ -13,6 +13,20 @@ export function formatSources(sources: RetrievedChunk[]): string {
     .join("\n");
 }
 
+export interface AskArgs {
+  question: string;
+  debug: boolean;
+}
+
+/**
+ * Parses the CLI arguments of `npm run ask` / `npm run ask:debug`.
+ *   ["How", "many", "days?"]            → { question: "How many days?", debug: false }
+ *   ["--debug", "How many days?"]       → { question: "How many days?", debug: true }
+ */
+export function parseAskArgs(argv: string[]): AskArgs {
+  return { question: argv.filter(arg => arg !== "--debug").join(" ").trim(), debug: argv.includes("--debug") };
+}
+
 /** Turns common failures into a message that tells you what to do next. */
 export function handleCliError(error: unknown): never {
   const message = describeError(error);

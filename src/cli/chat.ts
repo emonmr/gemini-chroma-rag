@@ -55,7 +55,7 @@ async function main() {
     try {
       for await (const event of app.ask.askStream(question, history)) {
         if (event.type === "sources") lastSources = event.sources;
-        else {
+        else if (event.type === "delta") {
           answer += event.text;
           output.write(event.text);
         }

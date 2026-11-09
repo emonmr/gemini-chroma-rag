@@ -10,13 +10,13 @@ Rule of thumb: **read → run → break it → build the next piece.**
 
 - [x] **0.1 Run it.** Follow the README quick start until `npm run chat` answers "How many days of annual leave do I get?" with a citation.
 - [x] **0.2 Your first LLM call.** Run `npm run hello`, then edit `src/playground/01-hello-gemini.ts`: change the system instruction, print `usageMetadata`, ask about the fictional "Nimbus Coffee" leave policy *without* RAG and watch it invent an answer (hallucination).
-- [ ] **0.3 See embeddings.** Run `npm run embeddings`. Add your own sentences (Bangla + English, a typo, an unrelated sentence). Write down: what score means "related" for this model?
+- [x] **0.3 See embeddings.** Run `npm run embeddings`. Add your own sentences (Bangla + English, a typo, an unrelated sentence). Write down: what score means "related" for this model?
 
 ## Phase 1 — Understand the RAG pipeline (1–2 days)
 
 Read the code in this order: `core/ports.ts` → `rag/chunker.ts` → `rag/ingest.service.ts` → `rag/ask.service.ts` → `rag/prompt.ts` → `adapters/*`.
 
-- [ ] **1.1 Trace a question.** Add an `npm run ask:debug` script (a `--debug` flag on `src/cli/ask.ts`) that prints the retrieved chunks and the full prompt sent to Gemini. *Done when* you can explain every line of that prompt.
+- [x] **1.1 Trace a question.** Add an `npm run ask:debug` script (a `--debug` flag on `src/cli/ask.ts`) that prints the retrieved chunks and the full prompt sent to Gemini. *Done when* you can explain every line of that prompt.
 - [ ] **1.2 Chunking experiments.** Re-ingest with `CHUNK_SIZE` 300 / 1000 / 3000 and compare answers to the same 5 questions. Write your conclusions at the bottom of this file.
 - [ ] **1.3 Add your own documents.** Put public docs you know well (e.g. docs of a library you use) in `data/docs` and chat with them. Find 3 questions it answers badly — keep them for Phase 3.
 - [ ] **1.4 Markdown-aware chunking.** Split on `#`/`##` headings first and store the section heading in metadata; prepend it to each chunk's text before embedding. Compare retrieval with 1.2.
@@ -62,6 +62,7 @@ Read the code in this order: `core/ports.ts` → `rag/chunker.ts` → `rag/inges
 ## My notes & conclusions
 
 <!-- Write what you learned after each step. Future you (and interviewers) will love this. -->
-- [ x] today i just setup project and hit some command from readme file . just saw how vector database works and how to get gemini api
-- [ x] Today I learned what an AI hallucination is, and how RAG (Retrieval-Augmented Generation) helps prevent the AI from hallucinating.
+- [x] today i just setup project and hit some command from readme file . just saw how vector database works and how to get gemini api
+- [x] Today I learned what an AI hallucination is, and how RAG (Retrieval-Augmented Generation) helps prevent the AI from hallucinating.
 - [x] I now understand the Gemini similarity scores. Relevant sentences like "How many vacation days do employees get?" score above 0.822, whereas completely irrelevant ones like "আজকের আবহাওয়া কেমন?" drop to around 0.596.
+- [x] Learned: the LLM only sees the prompt, so with ask:debug I can check if the right chunks were retrieved before blaming the model.

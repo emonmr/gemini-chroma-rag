@@ -15,6 +15,7 @@
     "ingest": "tsx src/cli/ingest.ts",
     "ingest:reset": "tsx src/cli/ingest.ts --reset",
     "ask": "tsx src/cli/ask.ts",
+    "ask:debug": "tsx src/cli/ask.ts --debug",
     "chat": "tsx src/cli/chat.ts",
     "test": "tsx --test tests/*.test.ts",
     "typecheck": "tsc --noEmit",

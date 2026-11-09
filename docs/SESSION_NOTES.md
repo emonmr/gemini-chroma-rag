@@ -91,3 +91,20 @@ Claude Code sessions are stored per machine, so this file carries the context ac
 2. Small cleanup in `02-embeddings.ts`: dangling "vs each sentence:" heading + indentation of the topK loop.
    Optional: `if (k <= 0) return [];` first in `topK()`; stretch: "Employees get 30 days of paid leave." (numbers).
 3. `/next-step` → **1.1 `ask --debug`**.
+
+## 2026-11-09 — Session 5: 0.3 ticked, step 1.1 `ask:debug` done
+
+- Ticked 0.3; tidied `02-embeddings.ts` (old TODOs, topK loop indentation).
+- **Step 1.1 done & ticked.** `AskService.askStream` now emits `sources → prompt → delta…`; the `prompt` event carries the
+  exact `GenerateRequest` sent to the LLM (same object → debug output can't drift). `ask()` and `askStream()` share a
+  `private buildRequest()`. `parseAskArgs()` in `src/cli/shared.ts` handles `--debug`. New `npm run ask:debug -- "…"`.
+  New test file `tests/ask-debug.test.ts` → 58/58 green.
+- Learned: `yield` in an `async *` generator = C# `yield return` in `IAsyncEnumerable`; the caller's `for await` gets one
+  event per loop pass. Tests cover logic, not `console.log` display.
+- Seen in `ask:debug` (Gemini, leave question): chunks [3]/[4] were off-topic `remote-work.md` (0.636 / 0.628, below the
+  ~0.70 cut-off) → step 2.1 `MIN_SCORE`. Chunk [2] starts with "days." → 150-char overlap cuts mid-sentence → steps 1.2/1.4.
+
+### ▶ Pick up here
+1. Optional stretch: `/prompt` command in `npm run chat` (store `lastRequest` from the `prompt` event, print it) —
+   watch history grow, old turns stored without context, 6-message cap.
+2. `/next-step` → **1.2 Chunking experiments** (`CHUNK_SIZE` 300 / 1000 / 3000, same 5 questions; use `ask:debug`).

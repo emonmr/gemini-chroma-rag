@@ -86,13 +86,14 @@ describe("AskService", () => {
     assert.deepEqual(await strict.retrieve("completely unrelated question about football"), []);
   });
 
-  it("streams sources first, then the answer text", async () => {
+  it("streams sources first, then the prompt, then the answer text", async () => {
     const { ingest, ask } = setup();
     await ingest.run();
     const events = [];
     for await (const event of ask.askStream("annual leave?")) events.push(event);
     assert.equal(events[0]?.type, "sources");
-    assert.ok(events.slice(1).every((e) => e.type === "delta"));
+    assert.equal(events[1]?.type, "prompt"); // step 1.1
+    assert.ok(events.slice(2).every((e) => e.type === "delta"));
   });
 });
 

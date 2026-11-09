@@ -12,6 +12,7 @@
     "chroma:down": "docker compose down",
     "hello": "tsx src/playground/01-hello-gemini.ts",
     "embeddings": "tsx src/playground/02-embeddings.ts",
+    "chunking": "tsx src/playground/03-chunking.ts",
     "ingest": "tsx src/cli/ingest.ts",
     "ingest:reset": "tsx src/cli/ingest.ts --reset",
     "ask": "tsx src/cli/ask.ts",

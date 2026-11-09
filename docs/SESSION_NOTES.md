@@ -108,3 +108,18 @@ Claude Code sessions are stored per machine, so this file carries the context ac
 1. Optional stretch: `/prompt` command in `npm run chat` (store `lastRequest` from the `prompt` event, print it) —
    watch history grow, old turns stored without context, 6-message cap.
 2. `/next-step` → **1.2 Chunking experiments** (`CHUNK_SIZE` 300 / 1000 / 3000, same 5 questions; use `ask:debug`).
+
+## 2026-11-09 — Session 5b: step 1.2 scaffold (not started yet)
+
+- `/next-step` created step 1.2: `src/rag/chunking-experiment.ts` (TODO: `runChunkingExperiment`),
+  `src/playground/03-chunking.ts` (`npm run chunking`), `tests/chunking-experiment.test.ts`.
+- `npm run check` = **7 failing on purpose** (58 pass) — those 7 define "done" for 1.2.
+- Experiment uses in-memory stores per chunk size (300 / 1000 / 3000) → Chroma untouched, no re-ingest, no LLM calls.
+
+### ▶ Pick up here (home PC, Ollama)
+1. `git pull` → `npm run check` (expect 58 pass / 7 fail).
+2. Implement `runChunkingExperiment`: embed each question ONCE before the size loop; reuse `IngestService`
+   with a fresh `deps.createStore()` per size; `store.query(vector, topK)`; `contextChars` = sum of hit text lengths.
+3. Add 2 questions in `03-chunking.ts` (one needing two sections, one not in the docs). Predict, then `npm run chunking`.
+   Note: on Ollama (embeddinggemma) scores are lower than Gemini (related ≈ 0.43–0.72) — compare within one model only.
+4. Write 2–3 lines of conclusions in ROADMAP notes → `/review-step`.
